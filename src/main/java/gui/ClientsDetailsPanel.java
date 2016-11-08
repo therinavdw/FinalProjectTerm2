@@ -1,17 +1,16 @@
 package gui;
 
-import bank.Bank;
 import bank.BankAccount;
 import bank.Client;
-import main.ProgramState;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by therina on 2016/06/04.
+ * Created by therina on 2016/11/08.
  */
 public class ClientsDetailsPanel extends JPanel {
+
     private Client client;
     private BankAccount bankAccount;
     private JLabel nameLabel;
@@ -20,11 +19,9 @@ public class ClientsDetailsPanel extends JPanel {
     private JLabel bankAccountLabel;
 
 
-    public  ClientsDetailsPanel (){
+    public ClientsDetailsPanel(){
         prepareGUI();
     }
-
-
 
     public void prepareGUI(){
         this.setLayout(new GridLayout(5,1));
@@ -57,4 +54,5 @@ public class ClientsDetailsPanel extends JPanel {
         bankAccountLabel.setText(accountsMessage);
 
     }
+
 }

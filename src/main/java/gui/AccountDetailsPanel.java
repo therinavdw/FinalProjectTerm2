@@ -16,6 +16,7 @@ public class AccountDetailsPanel extends JPanel {
     private JLabel accountNumber;
     private JLabel transactionCount;
 
+
     public  AccountDetailsPanel (){
         prepareGUI();
     }

@@ -1,119 +1,82 @@
 package gui;
 
-
-
 import bank.BankAccount;
 import bank.Client;
-import exception.NegativeAmountException;
 import main.ProgramState;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BandCombineOp;
 import java.io.*;
 
 /**
- * Created by therina on 2016/10/02.
+ * Created by therina on 2016/10/21.
  */
-public class HomeFrame extends JFrame {
+public class AccountsFrame extends JFrame {
     private ProgramState programState;
-    private JTextArea textArea;
-    private FormPanel formPanel;
     private JFileChooser importFileChooser;
     private JFileChooser exportFileChooser;
-    private AccountFormPanel accountFormPanel;
+    private JLabel bankAccountLabel;
+    private BankAccount bankAccount;
+    private JButton backButton;
+    private JLabel bankAccountBalance;
 
 
-    private JPanel toolbar;
-    private JComboBox clientCombo;
-    private JButton searchButton;
-    private Client client;
     private ClientFrame clientFrame;
 
-    private JButton endMonthButton;
+    private JPanel toolbar;
+    private WithdrawOrDepositForm withdrawOrDepositForm;
+    private CloseAccountForm closeAccountForm;
 
-
-
-    public HomeFrame(ProgramState programState){
+    public  AccountsFrame(ProgramState programState){
         super();
         this.programState = programState;
-        this.setSize(600,500);
+        this.setSize(600, 500);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(createMenuBar());
+
         prepareGUI();
 
     }
 
-
-    private void prepareGUI(){
-        this.setTitle("Home Frame");
+    private void  prepareGUI(){
+        this.setTitle("Account Details");
         setLayout(new BorderLayout());
-        toolbar = new JPanel();
-        textArea = new JTextArea();
-        formPanel = new FormPanel(programState);
+
+        closeAccountForm = new CloseAccountForm(programState);
 
         importFileChooser = new JFileChooser();
         exportFileChooser = new JFileChooser();
 
 
+        withdrawOrDepositForm = new WithdrawOrDepositForm(programState);
+
+
         ////////////////////toolbar/////////////////////
-    toolbar.setBorder(BorderFactory.createEtchedBorder());
+        toolbar = new JPanel(new BorderLayout(5,5));
+        toolbar.setBorder(BorderFactory.createEtchedBorder());
+        bankAccountLabel = new JLabel();
+        bankAccountBalance = new JLabel();
+        backButton = new JButton("Back");
 
-        clientCombo = new JComboBox();
-        for (Client client :programState.getClientList()){
-            clientCombo.addItem(client);
-        }
 
-        searchButton = new JButton("Search");
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Client client = (Client) clientCombo.getSelectedItem();
-                programState.setSelectedClient(client);
-                clientFrame = new ClientFrame(programState);
-                clientFrame.setClient(client);
-
-                HomeFrame.this.dispose();
-
-//                homeFrame.setClient((Client) clientCombo.getSelectedItem());
-            }
-        });
-        endMonthButton = new JButton("End Month");
-        endMonthButton.addActionListener(new ActionListener() {
+        toolbar.add(bankAccountLabel, BorderLayout.WEST);
+        toolbar.add(bankAccountBalance,BorderLayout.SOUTH);
+        toolbar.add(backButton, BorderLayout.EAST);
+        backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (BankAccount account : programState.getBankAccounts()){
-
-                    try {
-                        account.endMonth();
-
-
-                    } catch (NegativeAmountException e1) {
-                        e1.printStackTrace();
-                    }
-
-                }
-                JOptionPane.showMessageDialog(HomeFrame.this, "Month ended.");
+                clientFrame = new ClientFrame(programState);
+                AccountsFrame.this.dispose();
             }
         });
-
-
-
-
-
-
-
-        toolbar.add(clientCombo,BorderLayout.WEST);
-        toolbar.add(searchButton,BorderLayout.WEST);
-        toolbar.add(endMonthButton,BorderLayout.EAST);
-
         add(toolbar,BorderLayout.NORTH);
-        add(formPanel,BorderLayout.WEST);
-        add(textArea,BorderLayout.CENTER);
-
+        add(closeAccountForm,BorderLayout.WEST);
+        add(withdrawOrDepositForm,BorderLayout.EAST);
 
         setVisible(true);
-
     }
 
     private JMenuBar createMenuBar(){
@@ -126,7 +89,7 @@ public class HomeFrame extends JFrame {
 
         exitItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int action = JOptionPane.showConfirmDialog(HomeFrame.this,"Are you sure you want to exit?","Confirm exit",JOptionPane.OK_CANCEL_OPTION);
+                int action = JOptionPane.showConfirmDialog(AccountsFrame.this,"Are you sure you want to exit?","Confirm exit",JOptionPane.OK_CANCEL_OPTION);
                 if (action == JOptionPane.OK_OPTION) {
                     System.exit(0);
                 }
@@ -135,9 +98,9 @@ public class HomeFrame extends JFrame {
 
         importDataItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(importFileChooser.showOpenDialog(HomeFrame.this) == JFileChooser.APPROVE_OPTION){
+                if(importFileChooser.showOpenDialog(AccountsFrame.this) == JFileChooser.APPROVE_OPTION){
 
-                    int action = JOptionPane.showConfirmDialog(HomeFrame.this,"Are you sure you want to import/load?","Confirm import",JOptionPane.OK_CANCEL_OPTION);
+                    int action = JOptionPane.showConfirmDialog(AccountsFrame.this,"Are you sure you want to import/load?","Confirm import",JOptionPane.OK_CANCEL_OPTION);
                     if (action == JOptionPane.OK_OPTION) {
                         importFileChooser.getSelectedFile();
                         File file = importFileChooser.getSelectedFile();
@@ -163,9 +126,9 @@ public class HomeFrame extends JFrame {
 
         exportDataItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if(exportFileChooser.showOpenDialog(HomeFrame.this) == JFileChooser.APPROVE_OPTION) {
+                if(exportFileChooser.showOpenDialog(AccountsFrame.this) == JFileChooser.APPROVE_OPTION) {
 
-                    int action = JOptionPane.showConfirmDialog(HomeFrame.this, "Are you sure you want to export/save?", "Confirm export", JOptionPane.OK_CANCEL_OPTION);
+                    int action = JOptionPane.showConfirmDialog(AccountsFrame.this, "Are you sure you want to export/save?", "Confirm export", JOptionPane.OK_CANCEL_OPTION);
                     if (action == JOptionPane.OK_OPTION) {
                         exportFileChooser.getSelectedFile();
                         File file = exportFileChooser.getSelectedFile();
@@ -198,5 +161,20 @@ public class HomeFrame extends JFrame {
 
 
         return menuBar;
+
+    }
+
+    public void setBankAccount(BankAccount bankAccount){
+        this.bankAccount = bankAccount;
+        refresh();
+
+
+
+    }
+
+    public void refresh(){
+        bankAccountLabel.setText("Bank account number:  " + bankAccount.getAccountNum().toString());
+        bankAccountBalance.setText("Balance:" + bankAccount.getBalance());
+
     }
 }

@@ -20,26 +20,22 @@ public class ClientFrame extends JFrame {
     private ProgramState programState;
     private AccountFormPanel accountFormPanel;
     private BankAccount bankAccount;
+    private HomeFrame homeFrame;
 
 
     private JPanel accountFromPanel;
-//    private JTextArea textArea;
 
-
-
-    private JPanel detailsPanel;
-    private JComboBox accountsCombo;
-    private JTextField accountDetails;
-
+    private DetailsPanel detailsPanel;
     private JFileChooser importFileChooser;
     private JFileChooser exportFileChooser;
-    private JTextField clientNumberField;
+
     private Client client;
 
 
 
     private JPanel toolbar;
     private JLabel nameLabel;
+    private JButton backButton;
 
 
     public ClientFrame(ProgramState programState) {
@@ -59,42 +55,39 @@ public class ClientFrame extends JFrame {
 
     private void prepareGUI(){
         this.setTitle("Cliet Details");
-//        setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 //        textArea = new JTextArea();
 
 
 
-        detailsPanel = new JPanel();
-        detailsPanel.setLayout(new GridBagLayout());
-        detailsPanel.setPreferredSize(new Dimension(50, 40));
-        detailsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        accountsCombo = new JComboBox();
-        for (BankAccount bankAccount :programState.getBankAccounts()){
-            accountsCombo.addItem(bankAccount);
-        }
-        accountsCombo.setPreferredSize(new Dimension(300,300));
 
+//        accountsCombo.setPreferredSize(new Dimension(300,300));
 
-        toolbar = new JPanel();
+        detailsPanel = new DetailsPanel(programState);
+        toolbar = new JPanel(new BorderLayout());
         accountFromPanel = new AccountFormPanel(programState);
 
-        accountDetails = new JTextField();
+        backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                homeFrame = new HomeFrame(programState);
+                ClientFrame.this.dispose();
+            }
+        });
+
+//        accountDetails = new JTextField();
 
         importFileChooser = new JFileChooser();
         exportFileChooser = new JFileChooser();
 
         nameLabel = new JLabel();
 
-        toolbar.add(nameLabel);
+        toolbar.add(nameLabel,BorderLayout.WEST);
+        toolbar.add(backButton,BorderLayout.EAST);
         toolbar.setBorder(BorderFactory.createEtchedBorder());
 
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 1;
-        detailsPanel.add(accountsCombo, c);
-        c.gridx= 1;
-        c.gridy=1;
-        detailsPanel.add(accountDetails, c);
+//
 
         add(accountFromPanel,BorderLayout.WEST);
         add(toolbar,BorderLayout.NORTH);
@@ -195,6 +188,7 @@ public class ClientFrame extends JFrame {
     public void setClient(Client client){
         this.client = client;
         nameLabel.setText("Name:  " + client.getClientName().toString());
+
 
 
     }

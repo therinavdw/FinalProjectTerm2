@@ -13,6 +13,7 @@ public class ProgramState implements Serializable {
     private List<Client> clientList;
     private List<BankAccount> bankAccounts;
     private Client selectedClient;
+    private BankAccount selectedBankAccount;
 
 
     public  ProgramState()
@@ -28,6 +29,7 @@ public class ProgramState implements Serializable {
     }
 
 
+
     public List<Client> getClientList() {
         return clientList;
     }
@@ -38,5 +40,13 @@ public class ProgramState implements Serializable {
 
     public void setSelectedClient(Client selectedClient) {
         this.selectedClient = selectedClient;
+    }
+
+    public void setSelectedBankAccount(BankAccount selectedBankAccount){
+        this.selectedBankAccount = selectedBankAccount;
+    }
+
+    public BankAccount getSelectedbankAccount() {
+        return selectedBankAccount;
     }
 }

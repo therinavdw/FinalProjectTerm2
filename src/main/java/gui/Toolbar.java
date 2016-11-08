@@ -17,6 +17,7 @@ public class Toolbar extends JPanel {
     private JComboBox clientCombo;
     private JButton searchButton;
     private Client client;
+    private JButton backButton;
 
     public  Toolbar(ProgramState programState){
         super();
@@ -43,10 +44,17 @@ public class Toolbar extends JPanel {
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Client client = (Client) clientCombo.getSelectedItem();
-//                clientsDetailsPanel.setClient((Client) clientCombo.getSelectedItem());
+//
             }
         });
-        //set up combobox
+
+        backButton = new JButton("Back");
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
 
 
